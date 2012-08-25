@@ -19,3 +19,40 @@ block content
     else
       | participant 
     | this round, and the flag was first captured in #{minCapturer.time} seconds.
+  table.resultsTable.table
+    thead
+      tr
+        th.number #
+        th.nick IRC Nick
+        th.seconds Seconds
+        th.requests Requests
+    tbody
+      each participant, k in round.participants
+        tr.resultsRow(data-participant="#{participant.nick}")
+          td.number= k+1
+          td.nick= participant.nick
+          td.seconds= participant.time
+          td.requests= participant.reqs
+        tr.extraData
+          td
+          td(colspan=3)
+            div
+              b Chunk Breakdown
+              table.chunkBreakdown.table
+                thead
+                  tr
+                    th.number #
+                    th.seconds Seconds
+                    th.cumSeconds Cumulative Seconds
+                    th.requests Requests
+                    th.cumRequests Cumulative Requests
+                tbody
+                  - var cS = 0, cR = 0
+                  - for (var i = 0; i < round.chunks; i++) {
+                    tr
+                      td.number= i+1
+                      td.seconds= participant.chunkTimes[i]
+                      td.cumSeconds= (cS += participant.chunkTimes[i])
+                      td.requests= participant.chunkReqs[i]
+                      td.cumRequests= (cR += participant.chunkReqs[i])
+                  - }

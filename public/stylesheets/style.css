@@ -1,8 +1,54 @@
 body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  padding-top: 50px;
 }
 
-a {
-  color: #00B7FF;
+/*** RESULTS TABLE ***/
+.resultsTable {
+	width: 100%;
+}
+
+.resultsTable th {
+	text-align: left;
+}
+
+.resultsTable th:last-child, .resultsTable td:last-child, .chunkBreakdown th:last-child, .chunkBreakdown td:last-child {
+	text-align: right;
+}
+
+.resultsTable tr {
+	/*display: none;*/
+}
+
+.resultsTable td {
+	cursor: pointer;
+}
+
+.resultsTable .extraData > td {
+	cursor: default;
+	text-align: left;
+	border-top: 1px solid #eee;
+}
+
+.resultsTable .extraData.hidden {
+	display: none;
+}
+
+.resultsTable .number {
+	width: 50px;
+}
+
+.resultsTable .nick {
+	width: auto;
+}
+
+.resultsTable .seconds {
+	width: 150px;
+}
+
+.resultsTable .requests {
+	width: 150px;
+}
+
+.chunkBreakdown {
+	list-style-type: none;
 }

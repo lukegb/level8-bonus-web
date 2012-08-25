@@ -1,7 +1,3 @@
-
-/*
- * GET 
- */
 var mongo = require('mongojs');
 
 var db = mongo.connect(process.env.MONGO_URI.replace('mongodb://', ''), ['rounds']);
