@@ -1,18 +1,22 @@
 Round start
 ===========
 
->> POST /rounds/
+>> POST /
 >> Content-type: application/json
 >>
->> {"flag": "987123654456", "participants": [{"nick": "lukegb"}, {"nick": "danopia"}]}
+>> {"flag":"987123654456","chunks":4,"participants":[{"nick":"lukegb"},{"nick":"danopia"}]}
 << HTTP/1.1 201 Created
-<< Location: /rounds/{{mongodbid}}
+<< Location: /{{mongodbid}}
 
 Round end
 =========
 
->> PUT /rounds/{{mongodbid}}
+>> PUT /{{mongodbid}}
 >> Content-type: application/json
 >>
->> {"flag":"987123654456","participants":[{"nick":"lukegb","chunkTimes":[30,23,49,12],"time":144,"chunkReqs":[400,500,300,80],"reqs":1280,"place":2,"agent":"Ruby","locks":510]}
+>> {"flag":"987123654456","chunks":4,"participants":[{"nick":"lukegb","chunkTimes":[30,23,49,12],"time":144,"chunkReqs":[400,500,300,80],"reqs":1280,"agent":"Ruby","locks":510]}
 << HTTP/1.1 204 No Content
+
+`chunkTimes` are the deltas in time between the user seeming to know that a chunk is right (by searching beyond it or completing the flag). `time` is how long it took for the user to submit the flag to the bot. All times are in seconds.
+
+Participants are listed in scoring order, first place first.
