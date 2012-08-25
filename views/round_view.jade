@@ -19,6 +19,8 @@ block content
     else
       | participant 
     | this round, and the flag was first captured in #{minCapturer.time} seconds.
+  p 
+    small If you click on the rows, you can see even more information! :)
   table.resultsTable.table
     thead
       tr
@@ -28,12 +30,13 @@ block content
         th.requests Requests
     tbody
       each participant, k in round.participants
+        a(name="#{participant.nick}")
         tr.resultsRow(data-participant="#{participant.nick}")
           td.number= k+1
           td.nick= participant.nick
           td.seconds= participant.time
           td.requests= participant.reqs
-        tr.extraData
+        tr.extraData(class="participant-#{encodeURIComponent(participant.nick)}")
           td
           td(colspan=3)
             div
