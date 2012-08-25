@@ -5,6 +5,7 @@
   "scripts": {
     "start": "node app"
   },
+	"main": "app",
   "engines": {
     "node": "0.8.x",
     "npm":  "1.1.x"
