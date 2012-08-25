@@ -1,0 +1,18 @@
+Round start
+===========
+
+>> POST /rounds/
+>> Content-type: application/json
+>>
+>> {"flag": "987123654456", "participants": [{"nick": "lukegb"}, {"nick": "danopia"}]}
+<< HTTP/1.1 201 Created
+<< Location: /rounds/{{mongodbid}}
+
+Round end
+=========
+
+>> PUT /rounds/{{mongodbid}}
+>> Content-type: application/json
+>>
+>> {"flag":"987123654456","participants":[{"nick":"lukegb","chunkTimes":[30,23,49,12],"time":144,"chunkReqs":[400,500,300,80],"reqs":1280,"place":2,"agent":"Ruby","locks":510]}
+<< HTTP/1.1 204 No Content
