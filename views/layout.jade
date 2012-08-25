@@ -1,7 +1,28 @@
 doctype 5
 html
   head
-    title= title
+    block title
+      title= title
+    link(rel='stylesheet', href='/stylesheets/bootstrap.min.css')
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
-    block content
+    div(class='navbar navbar-inverse navbar-fixed-top')
+      div(class='navbar-inner')
+        div(class='container-fluid')
+          a(class='brand', href='/') Level8 leaderboard
+    .container-fluid
+      .row-fluid
+        .span3
+          .well.sidebar-nav
+            ul.nav.nav-list
+              li.nav-header Rounds
+              each lround in rounds
+                if (typeof round !== "undefined" && round._id.toString() == lround._id.toString())
+                  li.active
+                    a(href='/#{lround._id}')= dateFormatter(lround.started)
+                else
+                  li
+                    a(href='/#{lround._id}')= dateFormatter(lround.started)
+        .span9
+          block content
+    script(src='/javascripts/bootstrap.min.js')

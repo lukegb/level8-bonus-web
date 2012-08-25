@@ -1,0 +1,21 @@
+extends layout
+
+block title
+  title= "Lvl8 Scoreboard: Round " + dateFormatter(round.started)
+
+block content
+  h1
+    | Lvl8 Round Scoreboard: 
+    = dateFormatter(round.started)
+  p 
+    | There 
+    if (round.participants.length > 1)
+      | were 
+    else
+      | was 
+    | #{round.participants.length} 
+    if (round.participants.length > 1)
+      | participants 
+    else
+      | participant 
+    | this round, and the flag was first captured in #{minCapturer.time} seconds.

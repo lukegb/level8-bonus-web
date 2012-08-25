@@ -3,12 +3,13 @@
  * Module dependencies.
  */
 
-var express = require('express')
-  , routes = require('./routes')
-  , http = require('http')
-  , path = require('path');
+var express = require('express'),
+    routes = require('./routes'),
+    http = require('http'),
+    path = require('path');
 
 var app = express();
+
 
 app.configure(function(){
   app.set('port', process.env.PORT || 3000);
@@ -18,6 +19,24 @@ app.configure(function(){
   app.use(express.logger('dev'));
   app.use(express.bodyParser());
   app.use(express.methodOverride());
+  app.use(function(req, res, next) {
+    // date formatter:
+
+    app.locals.dateFormatter = function(roundDate) {
+      return roundDate.getUTCDate() + "/" + roundDate.getUTCMonth() + "/" + roundDate.getUTCFullYear() + " " + roundDate.getUTCHours() + ":" + roundDate.getUTCMinutes();
+    };
+
+    // load up the list of top-20 races
+    var db = routes.rounds.db; // seriously? D:
+    db.rounds.find({}, function(err, res) {
+      if (!err) {
+        app.locals.rounds = res;
+      } else {
+        console.log(err);
+      }
+      next();
+    });
+  });
   app.use(app.router);
   app.use(express.static(path.join(__dirname, 'public')));
 });
@@ -27,6 +46,8 @@ app.configure('development', function(){
 });
 
 app.get('/', routes.index);
+
+app.get('/:round_id', routes.rounds.view);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
