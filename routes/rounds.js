@@ -101,21 +101,17 @@ exports.update = function(req, res, sse) {
       updatedStatus = true;
     }
 
-    db.rounds.update({_id: new mongo.ObjectId(req.params.round_id)}, {"$set": storeObj}, {safe:true}, function(err, resu) {
+    db.rounds.update({_id: new mongo.ObjectId(req.params.round_id)}, {"$set": storeObj}, {safe:true}, function(err, num_updated) {
       if (err) {
         res.send(500, {error: err});
       }
       if (!resu) {
         res.send(404);
       }
-      console.log(resu);
-      console.log(resu[0]);
-      console.log(resu[0]._id);
-      var resum = resu[0];
       if (updatedStatus)
-        sse.publish(resum._id, {"event":"new_status"}); // this triggers a refresh anyway
+        sse.publish(req.params.round_id, {"event":"new_status"}); // this triggers a refresh anyway
       else
-        sse.publish(resum._id, {"event":"update_participants", "new": resu.participants});
+        sse.publish(req.params.round_id, {"event":"update_participants", "new": storeObj.participants});
       res.send(204);
     });
     
@@ -136,15 +132,14 @@ exports.overwrite = function(req, res, sse) {
   if (storeObj.status == "completed")
     storeObj.completed = new Date();
 
-  db.rounds.update({_id: new mongo.ObjectId(req.params.round_id)}, storeObj, {safe:true, upsert:true}, function(err, resu) {
+  db.rounds.update({_id: new mongo.ObjectId(req.params.round_id)}, storeObj, {safe:true, upsert:true}, function(err, num_updated) {
     if (err) {
       res.send(500, {error: err});
     }
     if (!resu) {
       res.send(404);
     }
-    var resum = resu[0];
-    sse.publish(resum._id, {"event":"update_participants", "new": resum.participants});
+    sse.publish(req.params.round_id, {"event":"update_participants", "new": storeObj.participants});
     res.send(204);
   });
 };
