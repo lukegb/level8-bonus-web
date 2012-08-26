@@ -51,7 +51,12 @@ exports.add = function(req, res) {
   }
 
   var storeObj = req.body;
-  storeObj.started = new Date();
+  storeObj.added = new Date();
+  if (storeObj.status == "started" || storeObj.status == "completed")
+    storeObj.started = new Date();
+  if (storeObj.status == "completed")
+    storeObj.completed = new Date();
+  
   // done :P
   db.rounds.insert(storeObj, {safe: true}, function(err, resu) {
     if (err) {
@@ -68,6 +73,11 @@ exports.update = function(req, res) {
   }
 
   var storeObj = req.body;
+  if (storeObj.status == "started" || storeObj.status == "completed")
+    storeObj.started = new Date();
+  if (storeObj.status == "completed")
+    storeObj.completed = new Date();
+
   db.rounds.update({_id: new mongo.ObjectId(req.params.round_id)}, {"$set": storeObj}, {safe:true}, function(err, resu) {
     if (err) {
       res.send(500, {error: err});
@@ -87,6 +97,12 @@ exports.overwrite = function(req, res) {
 
   var storeObj = req.body;
   storeObj['_id'] = new mongo.ObjectId(req.params.round_id);
+  storeObj.added = new Date();
+  if (storeObj.status == "started" || storeObj.status == "completed")
+    storeObj.started = new Date();
+  if (storeObj.status == "completed")
+    storeObj.completed = new Date();
+
   db.rounds.update({_id: new mongo.ObjectId(req.params.round_id)}, storeObj, {safe:true, upsert:true}, function(err, resu) {
     if (err) {
       res.send(500, {error: err});

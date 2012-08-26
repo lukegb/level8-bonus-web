@@ -1,12 +1,12 @@
 extends layout
 
 block title
-  title= "Lvl8 Scoreboard: Round " + dateFormatter(round.started)
+  title= "Lvl8 Scoreboard: Round " + dateFormatter(round.added)
 
 block content
   h1
     | Lvl8 Round Scoreboard: 
-    = dateFormatter(round.started)
+    = dateFormatter(round.added)
   p 
     | There 
     if (round.participants.length > 1)
