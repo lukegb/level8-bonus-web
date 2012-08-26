@@ -37,13 +37,7 @@ block content
                 td.competitors= res.participants.length
                 td.fastestCapture= res.minCapturer.time
                 td.status
-                  if res.status == "waiting"
-                    span.label.label-inverse= res.status
-                  else if res.status == "running"
-                    span.label.label-success= res.status
-                  else if res.status == "completed"
-                    span.label.label-info= res.status
-                  else
-                    span.label.label-err Unknown
+                  status = res.status
+                  include includes/status_label.jade
       else
         h3 No rounds have been completed yet

@@ -1,0 +1,30 @@
+extends layout
+
+block title
+  title= "Lvl8 Scoreboard: Round " + dateFormatter(round.added) + " - waiting for participant"
+
+block content
+  h1
+    | Lvl8 Round Scoreboard: 
+    = dateFormatter(round.added)
+  p
+    | This round is 
+    status = round.status
+    include includes/status_label.jade
+    | .
+  p 
+    | There 
+    if (round.participants.length > 1)
+      | are 
+    else
+      | is 
+    | #{round.participants.length} 
+    if (round.participants.length > 1)
+      | participants 
+    else
+      | participant 
+    | who are currently waiting for this round to begin.
+  h2 Participants
+  ol
+    each participant in round.participants
+      li= participant.nick

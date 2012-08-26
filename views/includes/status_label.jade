@@ -1,0 +1,8 @@
+if status == "waiting"
+  span.label.label-inverse= status
+else if status == "running"
+  span.label.label-success= status
+else if status == "completed"
+  span.label.label-info= status
+else
+  span.label.label-err Unknown

@@ -20,10 +20,18 @@ html
                 each lround in rounds
                   if (typeof round !== "undefined" && round._id.toString() == lround._id.toString())
                     li.active
-                      a(href='/#{lround._id}')= dateFormatter(lround.added)
+                      a(href='/#{lround._id}')
+                        | #{dateFormatter(lround.added)}
+                        |  
+                        status = lround.status
+                        include includes/status_label.jade
                   else
                     li
-                      a(href='/#{lround._id}')= dateFormatter(lround.added)
+                      a(href='/#{lround._id}')
+                        | #{dateFormatter(lround.added)}
+                        |  
+                        status = lround.status
+                        include includes/status_label.jade
               else
                 li.nav-header No rounds yet
         .span9
