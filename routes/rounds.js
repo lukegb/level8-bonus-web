@@ -32,7 +32,7 @@ var fetch_or_404 = function(id, res, callback) {
 exports.view = function(req, res){
   // fetch from DB or 404
   fetch_or_404(req.params.round_id, res, function(round) {
-    if (req.get('Content-Type') == 'application/json') {
+    if (req.accepts('application/json')) {
       // just for you :)
       res.send(200, round);
     } else {
