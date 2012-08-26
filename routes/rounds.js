@@ -105,7 +105,7 @@ exports.update = function(req, res, sse) {
       if (err) {
         res.send(500, {error: err});
       }
-      if (!resu) {
+      if (num_updated == 0) {
         res.send(404);
       }
       if (updatedStatus)
@@ -136,7 +136,7 @@ exports.overwrite = function(req, res, sse) {
     if (err) {
       res.send(500, {error: err});
     }
-    if (!resu) {
+    if (num_updated == 0) {
       res.send(404);
     }
     sse.publish(req.params.round_id, {"event":"update_participants", "new": storeObj.participants});
