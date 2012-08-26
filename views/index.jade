@@ -5,3 +5,30 @@ block content
   p
     | The Level8 scoreboard displays the fastest times of
     | the competitors competing in the #level8-bonus rounds.
+  if (pageRounds.length > 0)
+    table.roundTable.table
+      thead
+        tr
+          th.when When
+          th.competitors Participants
+          th.fastestCapture Fastest Capture
+          th.status Status
+      tbody
+        each res in pageRounds
+          tr
+            td.when
+              a(href="/#{res._id}")= dateFormatter(res.added)
+            td.competitors= res.participants.length
+            td.fastestCapture= res.minCapturer.time
+            td.status
+              if res.status == "waiting"
+                span.label.label-inverse= res.status
+              else if res.status == "running"
+                span.label.label-success= res.status
+              else if res.status == "completed"
+                span.label.label-info= res.status
+              else
+                span.label.label-err Unknown
+
+  else
+    h3 No rounds have been completed yet
