@@ -140,6 +140,9 @@ exports.overwrite = function(req, res, sse) {
     if (!resu) {
       res.send(404);
     }
+    console.log(resu);
+    console.log(resu[0]);
+    console.log(resu[0]._id);
     var resum = resu[0];
     sse.publish(resum._id, {"event":"update_participants", "new": resum.participants});
     res.send(204);
