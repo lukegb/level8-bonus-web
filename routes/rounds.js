@@ -47,6 +47,19 @@ exports.view = function(req, res){
   });
 };
 
+exports.goToRunning = function(req, res) {
+  // find a running event
+  db.rounds.find({$or: [{status: "running"}, {status: "waiting"}]}).sort({added: -1}).toArray(function(err, resu) {
+    if (err || !resu) {
+      console.log(err);
+      return res.send(500);
+    } else if (!resu.length || resu.length === 0) {
+      return res.redirect('/');
+    }
+    res.redirect('/' + resu[0]._id);
+  });
+};
+
 exports.add = function(req, res) {
   // verify secret
   if (!req.get('x-secret') || req.get('x-secret') != req.app.get('secret')) {
@@ -69,30 +82,43 @@ exports.add = function(req, res) {
   });
 };
 
-exports.update = function(req, res) {
+exports.update = function(req, res, sse) {
   // verify secret
   if (!req.get('x-secret') || req.get('x-secret') != req.app.get('secret')) {
     return res.send(403);
   }
 
-  var storeObj = req.body;
-  if (storeObj.status == "started" || storeObj.status == "completed")
-    storeObj.started = new Date();
-  if (storeObj.status == "completed")
-    storeObj.completed = new Date();
+  // fetch current data
+  fetch_or_404(req.params.round_id, res, function(round) {
 
-  db.rounds.update({_id: new mongo.ObjectId(req.params.round_id)}, {"$set": storeObj}, {safe:true}, function(err, resu) {
-    if (err) {
-      res.send(500, {error: err});
+    var storeObj = req.body;
+    var updatedStatus = false;
+    if (round.status !== storeObj.status) {
+      if (storeObj.status == "started" || storeObj.status == "completed")
+        storeObj.started = new Date();
+      if (storeObj.status == "completed")
+        storeObj.completed = new Date();
+      updatedStatus = true;
     }
-    if (!resu) {
-      res.send(404);
-    }
-    res.send(204);
+
+    db.rounds.update({_id: new mongo.ObjectId(req.params.round_id)}, {"$set": storeObj}, {safe:true}, function(err, resu) {
+      if (err) {
+        res.send(500, {error: err});
+      }
+      if (!resu) {
+        res.send(404);
+      }
+      if (updatedStatus)
+        sse.publish(resu._id, {"event":"new_status"}); // this triggers a refresh anyway
+      else
+        sse.publish(resu._id, {"event":"update_participants", "new": resu.participants});
+      res.send(204);
+    });
+    
   });
 };
 
-exports.overwrite = function(req, res) {
+exports.overwrite = function(req, res, sse) {
   // verify secret
   if (!req.get('x-secret') || req.get('x-secret') != req.app.get('secret')) {
     return res.send(403);
@@ -113,7 +139,24 @@ exports.overwrite = function(req, res) {
     if (!resu) {
       res.send(404);
     }
+    sse.publish(resu._id, {"event":"update_participants", "new": resu.participants});
     res.send(204);
+  });
+};
+
+exports.register_sse = function(req, res, sse) {
+  fetch_or_404(req.params.round_id, res, function(round) {
+    return sse.register(round._id, req, res);
+  });
+};
+
+exports.trigger_update = function(req, res, sse) {
+  // fetch from DB or 404
+  fetch_or_404(req.params.round_id, res, function(round) {
+    // okay, cool
+    sse.publish(round._id, {"event": "update_participants", "new": round.participants}, function(num) {
+      res.send(200, 'sent to ' + num);
+    });
   });
 };
 

@@ -30,39 +30,6 @@ block content
   h2 Leaderboard
   p 
     small If you click on the rows, you can see even more information! :)
-  table.resultsTable.table
-    thead
-      tr
-        th.number #
-        th.nick IRC Nick
-        th.chunksSoFar Chunks so far
-    tbody
-      each participant, k in round.participants
-        a(name="#{participant.nick}")
-        tr.resultsRow(data-participant="#{participant.nick}")
-          td.number= k+1
-          td.nick= participant.nick
-          td.chunksSoFar= participant.chunkTimes.length
-        tr.extraData(class="participant-#{encodeURIComponent(participant.nick)}")
-          td
-          td(colspan=3)
-            div
-              b Chunk Breakdown
-              table.chunkBreakdown.table
-                thead
-                  tr
-                    th.number #
-                    th.seconds Seconds
-                    th.cumSeconds Cumulative Seconds
-                    th.requests Requests
-                    th.cumRequests Cumulative Requests
-                tbody
-                  - var cS = 0, cR = 0
-                  - for (var i = 0; i < participant.chunkTimes.length; i++) {
-                    tr
-                      td.number= i+1
-                      td.seconds= participant.chunkTimes[i]
-                      td.cumSeconds= (cS += participant.chunkTimes[i])
-                      td.requests= participant.chunkReqs[i]
-                      td.cumRequests= (cR += participant.chunkReqs[i])
-                  - }
+  div#roundTable
+    participants = round.participants
+    include includes/round_table.jade

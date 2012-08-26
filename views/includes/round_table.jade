@@ -1,0 +1,40 @@
+// knights of the round table
+table.resultsTable.table
+  thead
+    tr
+      th.number #
+      th.nick IRC Nick
+      th.chunksSoFar Chunks so far
+  tbody
+    - k = 0
+    - each participant, k in participants
+      tr.resultsRow(data-participant=participant.nick)
+        td.number
+          a(name=participant.nick)
+          = k+1
+        td.nick= participant.nick
+        td.chunksSoFar= participant.chunkTimes.length
+      - participantClass = "participant-" + encodeURIComponent(participant.nick)
+      tr.extraData(class=participantClass)
+        td
+        td(colspan=3)
+          div
+            b Chunk Breakdown
+            table.chunkBreakdown.table
+              thead
+                tr
+                  th.number #
+                  th.seconds Seconds
+                  th.cumSeconds Cumulative Seconds
+                  th.requests Requests
+                  th.cumRequests Cumulative Requests
+              tbody
+                - var cS = 0, cR = 0
+                - for (var i = 0; i < participant.chunkTimes.length; i++) {
+                  tr
+                    td.number= i+1
+                    td.seconds= participant.chunkTimes[i]
+                    td.cumSeconds= (cS += participant.chunkTimes[i])
+                    td.requests= participant.chunkReqs[i]
+                    td.cumRequests= (cR += participant.chunkReqs[i])
+                - }
