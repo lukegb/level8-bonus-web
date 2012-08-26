@@ -39,8 +39,8 @@ table.resultsTable.table
                 - for (var i = 0; i < participant.chunkTimes.length; i++) {
                   tr
                     td.number= i+1
-                    td.seconds= participant.chunkTimes[i]
-                    td.cumSeconds= (cS += participant.chunkTimes[i])
+                    td.seconds= participant.chunkTimes[i]/1000
+                    td.cumSeconds= (cS += participant.chunkTimes[i])/1000
                     td.requests= participant.chunkReqs[i]
                     td.cumRequests= (cR += participant.chunkReqs[i])
                 - }
