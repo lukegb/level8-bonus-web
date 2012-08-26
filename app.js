@@ -34,9 +34,9 @@ app.configure(function(){
       return roundDate.getUTCDate() + "/" + roundDate.getUTCMonth() + "/" + roundDate.getUTCFullYear() + " " + paddedHours + ":" + paddedMinutes;
     };
 
-    // load up the list of top-20 races
+    // load up the list of top-5 races
     var db = routes.rounds.db; // seriously? D:
-    var c = db.rounds.find().sort({started: -1}).limit(20);
+    var c = db.rounds.find().sort({added: -1}).limit(5);
     c.toArray(function(err, res) {
       if (!err) {
         app.locals.rounds = res;
