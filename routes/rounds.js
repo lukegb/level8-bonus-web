@@ -63,8 +63,7 @@ exports.add = function(req, res) {
     if (err) {
       res.send(500, {error: err});
     }
-    console.log(resu);
-    res.set('Location', '/' + resu['_id']).send(201);
+    res.set('Location', '/' + resu[0]['_id']).send(201);
   });
 };
 
