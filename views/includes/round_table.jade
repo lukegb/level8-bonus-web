@@ -4,6 +4,7 @@ table.resultsTable.table
     tr
       th.number #
       th.nick IRC Nick
+      th.requestsSoFar HTTP requests made
       th.chunksSoFar Chunks so far
   tbody
     - k = 0
@@ -13,12 +14,17 @@ table.resultsTable.table
           a(name=participant.nick)
           = k+1
         td.nick= participant.nick
+        td.requestsSoFar= participant.requests
         td.chunksSoFar= participant.chunkTimes.length
       - participantClass = "participant-" + encodeURIComponent(participant.nick)
       tr.extraData(class=participantClass)
         td
         td(colspan=3)
           div
+            = participant.nick
+            |  grabbed the lock 
+            i= participant.locks
+            |  times.<br>
             b Chunk Breakdown
             table.chunkBreakdown.table
               thead
