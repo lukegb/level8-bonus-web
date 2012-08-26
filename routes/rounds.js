@@ -108,10 +108,11 @@ exports.update = function(req, res, sse) {
       if (!resu) {
         res.send(404);
       }
+      var resum = resu[0];
       if (updatedStatus)
-        sse.publish(resu._id, {"event":"new_status"}); // this triggers a refresh anyway
+        sse.publish(resum._id, {"event":"new_status"}); // this triggers a refresh anyway
       else
-        sse.publish(resu._id, {"event":"update_participants", "new": resu.participants});
+        sse.publish(resum._id, {"event":"update_participants", "new": resu.participants});
       res.send(204);
     });
     
@@ -139,7 +140,8 @@ exports.overwrite = function(req, res, sse) {
     if (!resu) {
       res.send(404);
     }
-    sse.publish(resu._id, {"event":"update_participants", "new": resu.participants});
+    var resum = resu[0];
+    sse.publish(resum._id, {"event":"update_participants", "new": resum.participants});
     res.send(204);
   });
 };
