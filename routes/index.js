@@ -13,9 +13,9 @@ exports.index = function(req, res){
   exports.rounds.db.rounds.count(function(err, totalCount) {
     var maxPage = Math.ceil(totalCount / AT_A_TIME);
     var page = parseInt(req.query['page'] || "1", 10);
-    if (page <= 0)
+    if (page <= 0 || (totalCount === 0 && page != 1))
       return res.redirect('/');
-    else if (page > maxPage)
+    else if (page > maxPage && totalCount !== 0)
       return res.redirect('/?page=' + maxPage);
 
     c = c.limit(AT_A_TIME).skip((page - 1) * AT_A_TIME);
