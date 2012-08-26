@@ -24,7 +24,14 @@ app.configure(function(){
     // date formatter:
 
     app.locals.dateFormatter = function(roundDate) {
-      return roundDate.getUTCDate() + "/" + roundDate.getUTCMonth() + "/" + roundDate.getUTCFullYear() + " " + roundDate.getUTCHours() + ":" + roundDate.getUTCMinutes();
+      var paddedHours = roundDate.getUTCHours().toString();
+      if (paddedHours.length < 2)
+        paddedHours = "0" + paddedHours;
+      var paddedMinutes = roundDate.getUTCMinutes().toString();
+      if (paddedMinutes.length < 2)
+        paddedMinutes = "0" + paddedMinutes;
+      
+      return roundDate.getUTCDate() + "/" + roundDate.getUTCMonth() + "/" + roundDate.getUTCFullYear() + " " + paddedHours + ":" + paddedMinutes;
     };
 
     // load up the list of top-20 races
