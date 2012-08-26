@@ -32,7 +32,8 @@ var fetch_or_404 = function(id, res, callback) {
 exports.view = function(req, res){
   // fetch from DB or 404
   fetch_or_404(req.params.round_id, res, function(round) {
-    if (req.accepts('application/json')) {
+    var use = req.accepts('html, json');
+    if (use == "json") {
       // just for you :)
       res.send(200, round);
     } else {
@@ -56,7 +57,7 @@ exports.add = function(req, res) {
     storeObj.started = new Date();
   if (storeObj.status == "completed")
     storeObj.completed = new Date();
-  
+
   // done :P
   db.rounds.insert(storeObj, {safe: true}, function(err, resu) {
     if (err) {
