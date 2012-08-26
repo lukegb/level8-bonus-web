@@ -154,9 +154,14 @@ exports.trigger_update = function(req, res, sse) {
   // fetch from DB or 404
   fetch_or_404(req.params.round_id, res, function(round) {
     // okay, cool
-    sse.publish(round._id, {"event": "update_participants", "new": round.participants}, function(num) {
-      res.send(200, 'sent to ' + num);
-    });
+    if (req.param('event') == 'update_participants')
+      sse.publish(round._id, {"event": "update_participants", "new": round.participants}, function(num) {
+        res.send(200, 'sent to ' + num);
+      });
+    else
+      sse.publish(round._id, {"event": "new_status"}, function(num) {
+        res.send(200, 'sent to ' + num);
+      });
   });
 };
 

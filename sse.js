@@ -45,7 +45,10 @@ exports.publish = function(key, message, callback) {
 	var k = key.toString();
 	var scope = {messagesSent: 0};
 	if (!clients[key])
-		return callback(0);
+		if (callback)
+			return callback(0);
+		else
+			return;
 	clients[key].forEach(function(client) {
 		client.publish(message);
 		scope.messagesSent++;
