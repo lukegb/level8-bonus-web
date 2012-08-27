@@ -46,12 +46,17 @@ $(function() {
 	if (amRoundPage) {
 		thisRoundId = $(".roundHeader").attr("data-round-id");
 	}
+
+	var debugMode = (document.cookie.indexOf("debug=true") !== -1);
+
+
 	var sse = new EventSource("/sse");
 	sse.addEventListener('message', function(e) {
 		if (e.origin !== document.location.origin)
-			return console.log("Origin mismatch:", e.origin, document.location.origin);
+			return (debugMode && console.log("Origin mismatch:", e.origin, document.location.origin));
 		var d = JSON.parse(e.data);
-		if (console.log) console.log(d, d.id, amRoundPage, thisRoundId);
+
+		if (debugMode && console.log) console.log(d, d.id, amRoundPage, thisRoundId);
 
 		if (d.event == 'update_participants' && amRoundPage && d.id == thisRoundId) {
 			if (!$("#roundTable").length) return (document.location = document.location);
