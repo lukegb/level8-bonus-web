@@ -66,7 +66,7 @@ exports.register = function(key, req, res) {
 	var client = new Client(req, res);
 	client.onDisconnect = (function(nk) {
 		return function() {
-			var c = clients[k];
+			var c = clients[nk];
 			for (var i in c) {
 				if (c[i] == client) {
 					c.splice(i, 1);
