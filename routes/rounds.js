@@ -95,7 +95,7 @@ exports.go_to = function(where) {
   })(what_thing);
 };
 
-exports.add = function(req, res) {
+exports.add = function(req, res, sse) {
   // verify secret
   if (!req.get('x-secret') || req.get('x-secret') != req.app.get('secret')) {
     return res.send(403);

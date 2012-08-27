@@ -74,7 +74,7 @@ app.get('/admin/force_recalcs', routes.rounds.force_recalculations);
 
 // -- Rounds
 //     -- Make new
-app.post('/', routes.rounds.add);
+app.post('/', function(req,res) { return routes.rounds.add(req, res, sse); });
 //     -- Go to running
 app.get('/running', routes.rounds.go_to('running'));
 //     -- Go to latest
