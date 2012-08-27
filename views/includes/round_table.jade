@@ -81,7 +81,7 @@ table.resultsTable.table
                     td.requests= participant.chunkReqs[i]
                     td.cumRequests= (cR += participant.chunkReqs[i])
                     - if ((participant.chunkTimes[i]/1000) != 0) {
-                      td.requestsPerSecond= participant.chunkReqs[i] / (participant.chunkTimes[i]/1000)
+                      td.requestsPerSecond= Math.round(participant.chunkReqs[i] / (participant.chunkTimes[i]/1000000))/1000
                     - } else {
                       td.requestsPerSecond 0
                     - }
