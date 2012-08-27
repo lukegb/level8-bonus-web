@@ -21,10 +21,10 @@ table.resultsTable.table
         td.nick= participant.nick
         td.requestsSoFar= participant.requests
         - if (participant.time) {
-          td.requestsPerSecond= Math.round(participant.requests / participant.time)/1000
+          td.requestsPerSecond= Math.round(participant.requests / (participant.time/1000000))/1000
         - } else if (participant.startedAt) {
           - var dateDiff = (new Date()).getTime() - participant.startedAt;
-          td.requestsPerSecond= Math.round(participant.requests / dateDiff)/1000
+          td.requestsPerSecond= Math.round(participant.requests / (dateDiff/1000000))/1000
         - } else {
           td.requestsPerSecond Data unavailable
         - }
