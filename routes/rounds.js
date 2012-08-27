@@ -114,12 +114,17 @@ exports.update = function(req, res, sse) {
   fetch_or_404(req.params.round_id, res, function(round) {
 
     var storeObj = req.body;
+    var storeObjId = new mongo.ObjectId(req.params.round_id);
     var updatedStatus = false;
     if (round.status !== storeObj.status) {
-      if (storeObj.status == "started" || storeObj.status == "completed")
+      if (storeObj.status == "started" || storeObj.status == "completed") {
         storeObj.started = new Date();
-      if (storeObj.status == "completed")
+        roundTimeoutArray[storeObjId] = Date.now();
+      }
+      if (storeObj.status == "completed") {
         storeObj.completed = new Date();
+        delete roundTimeoutArray[storeObjId];
+      }
       updatedStatus = true;
     }
 
@@ -133,7 +138,12 @@ exports.update = function(req, res, sse) {
       participant.time = totalTime;
     }
 
-    db.rounds.update({_id: new mongo.ObjectId(req.params.round_id)}, {"$set": storeObj}, {safe:true}, function(err, num_updated) {
+    if (storeObj.participants.length === 0) { // delete empty rounds
+      db.rounds.remove({_id: storeObjId});
+      return res.send(204);
+    }
+
+    db.rounds.update({_id: storeObjId}, {"$set": storeObj}, {safe:true}, function(err, num_updated) {
       if (err) {
         res.send(500, {error: err});
       }
@@ -159,10 +169,14 @@ exports.overwrite = function(req, res, sse) {
   var storeObj = req.body;
   storeObj['_id'] = new mongo.ObjectId(req.params.round_id);
   storeObj.added = new Date();
-  if (storeObj.status == "started" || storeObj.status == "completed")
+  if (storeObj.status == "started" || storeObj.status == "completed") {
     storeObj.started = new Date();
-  if (storeObj.status == "completed")
+    roundTimeoutArray[storeObjId] = Date.now();
+  }
+  if (storeObj.status == "completed") {
     storeObj.completed = new Date();
+    delete roundTimeoutArray[storeObjId];
+  }
 
   // infer times for each participant
   for (var p_id in storeObj.participants) {
@@ -172,6 +186,11 @@ exports.overwrite = function(req, res, sse) {
       totalTime += participant.chunkTimes[i];
     }
     participant.time = totalTime;
+  }
+
+  if (storeObj.participants.length === 0) { // delete empty rounds
+    db.rounds.remove({_id: storeObjId});
+    return res.send(204);
   }
 
   db.rounds.update({_id: new mongo.ObjectId(req.params.round_id)}, storeObj, {safe:true, upsert:true}, function(err, num_updated) {
