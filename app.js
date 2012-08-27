@@ -69,6 +69,9 @@ app.get('/rules', routes.pages.rules);
 // -- About
 app.get('/about', routes.pages.about);
 
+// -- Admin
+app.get('/admin/force_recalcs', routes.rounds.force_recalculations);
+
 // -- Rounds
 //     -- Make new
 app.post('/', routes.rounds.add);

@@ -108,6 +108,7 @@ exports.add = function(req, res) {
 var inferTimings = function(storeObj) {
 
   var chunkCount = storeObj.chunks || 4;
+  storeObj.chunks = chunkCount;
 
   // infer times for each participant
   for (var p_id in storeObj.participants) {
@@ -232,6 +233,55 @@ exports.trigger_update = function(req, res, sse) {
         res.send(200, 'sent to ' + num);
       });
   });
+};
+
+exports.force_recalculations = function(req, res) {
+  if (!req.param('secret') || req.param('secret') != '9n4alsdv98v')
+    return res.send(403);
+
+  // grab all of them
+  var calculated = 0;
+  var updated = 0;
+  res.writeHead(200, {
+    'Content-type': 'text/plain',
+    'Cache-Control': 'no-cache'
+  });
+  db.rounds.find().forEach(function(err, doc) {
+    if (err) {
+      res.write("ERR - " + err + "\n");
+      return console.log(err);
+    }
+
+    if (!doc) return;
+
+    res.write("Working on " + doc._id + ": ");
+
+    // fix flag caps
+    doc = inferTimings(doc);
+
+    // now update status
+    var t = doc.started.getTime();
+    var tn = new Date().getTime();
+    var td = tn - t;
+    if (td > 1000 * 60 * 10) { // more than ten minutes
+      doc.status = "completed";
+    }
+
+    res.write("...updating.\n");
+
+    db.rounds.update({_id: doc._id}, doc, {safe:true}, function(err, upd) {
+      res.write("Updating " + doc._id + ": ");
+      if (err) {
+        res.write("ERR - " + err + "\n");
+        return console.log(err);
+      }
+
+      res.write("updated " + upd + " document(s).\n");
+    });
+  });
+  setTimeout(function() {
+    res.end("...done!");
+  }, 10000);
 };
 
 exports.db = db; // err...
