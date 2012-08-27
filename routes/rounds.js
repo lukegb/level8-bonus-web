@@ -2,6 +2,20 @@ var mongo = require('mongojs');
 
 var db = mongo.connect(process.env.MONGO_URI.replace('mongodb://', ''), ['rounds']);
 
+var roundTimeoutArray = {};
+var TIMEOUT_DURATION = 10000;
+
+var roundTimeoutInterval = setInterval(function() {
+  for (var round_id in roundTimeoutArray) {
+    var round_timeout = roundTimeoutArray[round_id];
+    if (round_timeout < (Date.now() - TIMEOUT_DURATION)) {
+      // timed out
+      delete roundTimeoutArray[round_id];
+      db.rounds.update({_id: round_id}, {$set: {"state": "completed"}}, {safe:true});
+    }
+  }
+}, 2000);
+
 var fetch_by_id = function(id, callback) {
   // check valid object ID
   var roundObjectId;
@@ -109,6 +123,16 @@ exports.update = function(req, res, sse) {
       updatedStatus = true;
     }
 
+    // infer times for each participant
+    for (var p_id in storeObj.participants) {
+      var participant = storeObj.participants[p_id];
+      var totalTime = 0;
+      for (var i in participant.chunkTimes) {
+        totalTime += participant.chunkTimes[i];
+      }
+      participant.time = totalTime;
+    }
+
     db.rounds.update({_id: new mongo.ObjectId(req.params.round_id)}, {"$set": storeObj}, {safe:true}, function(err, num_updated) {
       if (err) {
         res.send(500, {error: err});
@@ -139,6 +163,16 @@ exports.overwrite = function(req, res, sse) {
     storeObj.started = new Date();
   if (storeObj.status == "completed")
     storeObj.completed = new Date();
+
+  // infer times for each participant
+  for (var p_id in storeObj.participants) {
+    var participant = storeObj.participants[p_id];
+    var totalTime = 0;
+    for (var i in participant.chunkTimes) {
+      totalTime += participant.chunkTimes[i];
+    }
+    participant.time = totalTime;
+  }
 
   db.rounds.update({_id: new mongo.ObjectId(req.params.round_id)}, storeObj, {safe:true, upsert:true}, function(err, num_updated) {
     if (err) {
