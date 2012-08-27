@@ -36,6 +36,7 @@ exports.index = function(req, res){
         }
       }
       res.render('index', {
+        page: 'rounds',
         title: 'Lvl8 Scoreboard',
         totalRounds: totalCount,
         pageRounds: resu,

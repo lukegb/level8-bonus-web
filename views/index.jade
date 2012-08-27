@@ -35,7 +35,10 @@ block content
                 td.when
                   a(href="/#{res._id}")= dateFormatter(res.added)
                 td.competitors= res.participants.length
-                td.fastestCapture= res.minCapturer.time
+                if (res.minCapturer && res.minCapturer.time)
+                  td.fastestCapture= res.minCapturer.time/1000
+                else
+                  td.fastestCapture Not captured
                 td.status
                   status = res.status
                   include includes/status_label.jade

@@ -6,10 +6,16 @@ html
     link(rel='stylesheet', href='/stylesheets/bootstrap.min.css')
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
-    div(class='navbar navbar-inverse navbar-fixed-top')
-      div(class='navbar-inner')
-        div(class='container-fluid')
-          a(class='brand', href='/') Level8 leaderboard
+    .navbar.navbar-inverse.navbar-fixed-top
+      .navbar-inner
+        .container-fluid
+          a.brand(href='/') Level8 leaderboard
+          ul.nav
+            - var navPages = [{'id': 'rounds', 'text': 'Rounds', 'href': '/'}, {'id': 'about', 'text': 'About', 'href': '/about'}, {'id': 'rules', 'text': 'Rules', 'href': '/rules'}]
+            each navPage in navPages
+              - var navClass = (page === navPage.id) ? 'active' : ''
+              li(class=navClass)
+                a(href=navPage.href)= navPage.text
     .container-fluid
       .row-fluid
         .span3

@@ -3,7 +3,7 @@
 var staticPage = function(jadefile, title) {
   return (function(jf, t) {
     return function(req, res) {
-      res.render(jf, {title: 'Lvl8 Scoreboard: ' + t});
+      res.render(jf, {page: jf, title: 'Lvl8 Scoreboard: ' + t});
     };
   })(jadefile, title);
 };

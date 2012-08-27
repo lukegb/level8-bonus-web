@@ -54,6 +54,7 @@ exports.view = function(req, res){
       // state should be one of:
       // completed, started or waiting
       res.render('round_view_' + round.status, {
+        page: 'rounds',
         round: round,
         minCapturer: round.participants[0]
       });

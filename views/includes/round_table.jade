@@ -16,10 +16,15 @@ table.resultsTable.table
           = k+1
         td.nick= participant.nick
         td.requestsSoFar= participant.requests
-        if participant.time
+        - if (participant.time) {
           td.timeTaken= participant.time/1000
-        else
+        - } else if (participant.deleted) {
           td.timeTaken
+            abbr(title="Did not finish: left after they started capturing") DNF
+        - } else {
+          td.timeTaken
+            small N/A
+        - }
         td.chunksSoFar= participant.chunkTimes.length
       - participantClass = "participant-" + encodeURIComponent(participant.nick)
       tr.extraData(class=participantClass)
