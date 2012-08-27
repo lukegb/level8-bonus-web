@@ -70,8 +70,9 @@ $(function() {
 			$q.appendTo($rT);
 			setupPlateTectonics();
 			// done :)
-		} else if (d.event == 'new_status' && amRoundPage && d.id == thisRoundId) {
+		} else if (d.event == 'new_status') {
 			// reload the page :P
+			// we need to reload the page to update the sidebar.
 			if (debugMode && console.log) console.log("new_status: reload");
 			document.location.reload(true);
 		} else if (d.event == 'new_round') {
