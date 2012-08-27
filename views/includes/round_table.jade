@@ -35,10 +35,13 @@ table.resultsTable.table
               | Lock grabbed: 
               i= participant.locks
               |  times.<br>
-            span
-              | User agent: 
-              i= participant.agent
-              | .<br><br>
+            - if (participant.agent && participant.agent.length) {
+              span
+                | User agent: 
+                i= participant.agent
+                | .<br>
+            - }
+            | <br>
             b Chunk Breakdown
             table.chunkBreakdown.table
               thead
