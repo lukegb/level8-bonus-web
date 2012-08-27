@@ -8,7 +8,7 @@ block content
   h1
     | Lvl8 Round Scoreboard: 
     = dateFormatter(round.added)
-  p.roundHeader(data-round-id=round._id)
+  p.roundHeader(data-round-id=round._id.toString())
     | This round is 
     status = round.status
     include includes/status_label.jade
