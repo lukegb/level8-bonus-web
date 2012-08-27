@@ -24,7 +24,11 @@ block content
       | participants 
     else
       | participant 
-    | this round, and the flag was first captured in #{minCapturer.time/1000} seconds.
+    | this round, and the flag was
+    if minCapturer.time
+      |  first captured in #{minCapturer.time/1000} seconds.
+    else
+      | n't captured by anyone.
   p 
     | The flag was 
     b #{round.flag}.
