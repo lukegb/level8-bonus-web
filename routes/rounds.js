@@ -107,10 +107,12 @@ exports.add = function(req, res) {
 
 var inferTimings = function(storeObj) {
 
+  var chunkCount = storeObj.chunks || 4;
+
   // infer times for each participant
   for (var p_id in storeObj.participants) {
     var participant = storeObj.participants[p_id];
-    if (participant.chunkTimes.length != storeObj.rounds)
+    if (participant.chunkTimes.length != chunkCount)
       continue; // no time
     var totalTime = 0;
     for (var i in participant.chunkTimes) {
@@ -190,16 +192,7 @@ exports.overwrite = function(req, res, sse) {
   }
 
   // infer times for each participant
-  for (var p_id in storeObj.participants) {
-    var participant = storeObj.participants[p_id];
-    if (participant.chunkTimes.length != storeObj.rounds)
-      continue; // no time
-    var totalTime = 0;
-    for (var i in participant.chunkTimes) {
-      totalTime += participant.chunkTimes[i];
-    }
-    participant.time = totalTime;
-  }
+  storeObj = inferTimings(storeObj);
 
   if (storeObj.participants.length === 0) { // delete empty rounds
     db.rounds.remove({_id: storeObjId});
