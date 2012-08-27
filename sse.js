@@ -31,9 +31,12 @@ var Client = function(req, res) {
 Client.prototype.publishString = function(m) {
 	var nm = m.replace("\n", "\ndata: ");
 
+	this.res.write("delay: 1000\n");
 	this.res.write("id: " + (this.messageCount++) + "\n");
 	this.res.write("data: " + nm + "\n\n");
+	this.res.end(); // need to end on heroku
 
+	console.log(" -- Done sending message to client");
 	// done
 };
 
@@ -42,6 +45,7 @@ Client.prototype.publish = function(message) {
 };
 
 exports.publish = function(key, message, callback) {
+	console.log("Publishing message to", key, " - ", message);
 	var k = key.toString();
 	var scope = {messagesSent: 0};
 	if (!clients[key])

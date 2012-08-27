@@ -47,17 +47,25 @@ exports.view = function(req, res){
   });
 };
 
-exports.goToRunning = function(req, res) {
-  // find a running event
-  db.rounds.find({$or: [{status: "running"}, {status: "waiting"}]}).sort({added: -1}).toArray(function(err, resu) {
-    if (err || !resu) {
-      console.log(err);
-      return res.send(500);
-    } else if (!resu.length || resu.length === 0) {
-      return res.redirect('/');
-    }
-    res.redirect('/' + resu[0]._id);
-  });
+exports.go_to = function(where) {
+  var what_thing = {};
+  if (where == 'running') {
+    what_thing = {$or: [{status: "running"}, {status: "waiting"}]};
+  }
+  return (function(search_obj) {
+    return function(req, res) {
+      // find a running event
+      db.rounds.find(search_obj).sort({added: -1}).toArray(function(err, resu) {
+        if (err || !resu) {
+          console.log(err);
+          return res.send(500);
+        } else if (!resu.length || resu.length === 0) {
+          return res.redirect('/');
+        }
+        res.redirect('/' + resu[0]._id);
+      });
+    };
+  })(what_thing);
 };
 
 exports.add = function(req, res) {
@@ -105,7 +113,7 @@ exports.update = function(req, res, sse) {
       if (err) {
         res.send(500, {error: err});
       }
-      if (num_updated == 0) {
+      if (num_updated === 0) {
         res.send(404);
       }
       if (updatedStatus)
@@ -136,7 +144,7 @@ exports.overwrite = function(req, res, sse) {
     if (err) {
       res.send(500, {error: err});
     }
-    if (num_updated == 0) {
+    if (num_updated === 0) {
       res.send(404);
     }
     sse.publish(req.params.round_id, {"event":"update_participants", "new": storeObj.participants});

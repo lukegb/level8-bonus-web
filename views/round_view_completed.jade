@@ -8,7 +8,7 @@ block content
   h1
     | Lvl8 Round Scoreboard: 
     = dateFormatter(round.added)
-  p
+  p.roundHeader
     | This round is 
     status = round.status
     include includes/status_label.jade

@@ -67,8 +67,10 @@ app.get('/', routes.index);
 // -- Rounds
 //     -- Make new
 app.post('/', routes.rounds.add);
-//    -- Go to running
-app.get('/running', routes.rounds.goToRunning);
+//     -- Go to running
+app.get('/running', routes.rounds.go_to('running'));
+//     -- Go to latest
+app.get('/latest', routes.rounds.go_to('latest'));
 //     -- Fetch
 app.get('/:round_id', routes.rounds.view);
 //     -- Update existing

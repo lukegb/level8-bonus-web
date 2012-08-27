@@ -28,7 +28,9 @@ $(function() {
 	// check that we should run on this page
 	if ($("#roundTable").length) {
 		setupPlateTectonics();
+	}
 
+	if ($(".roundHeader").length) {
 		// register for SSEs
 		var sse = new EventSource(document.location.pathname + "/sse");
 		sse.addEventListener('message', function(e) {
