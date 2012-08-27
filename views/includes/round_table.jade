@@ -5,7 +5,7 @@ table.resultsTable.table
       th.number #
       th.nick IRC Nick
       th.requestsSoFar HTTP requests made
-      th.timeTaken Time taken
+      th.timeTaken Time taken to capture flag
       th.chunksSoFar Chunks so far
   tbody
     - k = 0
@@ -16,12 +16,15 @@ table.resultsTable.table
           = k+1
         td.nick= participant.nick
         td.requestsSoFar= participant.requests
-        td.timeTaken= participant.time/1000
+        if participant.time
+          td.timeTaken= participant.time/1000
+        else
+          td.timeTaken
         td.chunksSoFar= participant.chunkTimes.length
       - participantClass = "participant-" + encodeURIComponent(participant.nick)
       tr.extraData(class=participantClass)
         td
-        td(colspan=3)
+        td(colspan=4)
           div
             span
               | Lock grabbed: 
