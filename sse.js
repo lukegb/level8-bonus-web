@@ -66,11 +66,14 @@ exports.register = function(key, req, res) {
 	// we ignore the key now
 	var client = new Client(req, res);
 	client.onDisconnect = function(me) {
+		console.log("DEREGISTERING CLIENT...", me);
 		for (var i in clients) {
 			if (clients[i] == me) {
+				console.log("is", clients[i],"!");
 				clients.splice(i, 1);
 				break;
 			}
+			console.log("is not", clients[i]);
 		}
 	};
 	if (!clients)
