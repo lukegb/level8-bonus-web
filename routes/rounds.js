@@ -2,15 +2,6 @@ var mongo = require('mongojs');
 
 var db = mongo.connect(process.env.MONGO_URI.replace('mongodb://', ''), ['rounds']);
 
-console.log("  --- Startup. Telling Mongo to set rounds over 10 minutes ago as complete");
-upperBound = new Date();
-upperBound.setTime((new Date()).getTime() - TIMEOUT_DURATION);
-db.rounds.update({started: {$lt: upperBound}}, {$set: {"state": "completed"}}, {safe:true}, function(err, num) {
-  if (err)
-    return console.log("Mongo failed to set rounds over 10 minutes ago complete: " + err);
-  console.log("Mongo completed " + num + " rounds.");
-});
-
 var fetch_by_id = function(id, callback) {
   // check valid object ID
   var roundObjectId;
