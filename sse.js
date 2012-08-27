@@ -16,7 +16,7 @@ var Client = function(req, res) {
 	req.socket.setTimeout(Infinity);
 
 	req.on('close', function() {
-		that.onDisconnect(that);
+		exports.removeClient(that);
 	});
 
 	// write header
@@ -62,20 +62,21 @@ exports.publish = function(key, message, callback) {
 		callback(scope.messagesSent);
 };
 
+exports.removeClient = function(client) {
+	console.log("DEREGISTERING CLIENT...", me);
+	for (var i in clients) {
+		if (clients[i] == me) {
+			console.log("is", clients[i],"!");
+			clients.splice(i, 1);
+			break;
+		}
+		console.log("is not", clients[i]);
+	}
+};
+
 exports.register = function(key, req, res) {
 	// we ignore the key now
 	var client = new Client(req, res);
-	client.onDisconnect = function(me) {
-		console.log("DEREGISTERING CLIENT...", me);
-		for (var i in clients) {
-			if (clients[i] == me) {
-				console.log("is", clients[i],"!");
-				clients.splice(i, 1);
-				break;
-			}
-			console.log("is not", clients[i]);
-		}
-	};
 	if (!clients)
 		clients = [];
 	clients.push(client);
