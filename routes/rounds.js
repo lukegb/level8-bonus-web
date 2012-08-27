@@ -2,23 +2,6 @@ var mongo = require('mongojs');
 
 var db = mongo.connect(process.env.MONGO_URI.replace('mongodb://', ''), ['rounds']);
 
-var roundTimeoutArray = {};
-var TIMEOUT_DURATION = 10000;
-
-var roundTimeoutInterval = setInterval(function() {
-  console.log(" --> Running timeout.");
-  for (var round_id in roundTimeoutArray) {
-    var round_timeout = roundTimeoutArray[round_id];
-    console.log("     Checking", round_id, " - timeout was set to", round_timeout, " - now is", Date.now(), " - timeout is", (Date.now() - TIMEOUT_DURATION));
-    if (round_timeout < ((new Date()).getTime() - TIMEOUT_DURATION)) {
-      // timed out
-      delete roundTimeoutArray[round_id];
-      console.log("      - setting to completed");
-      db.rounds.update({_id: round_id}, {$set: {"state": "completed"}}, {safe:true});
-    }
-  }
-}, 2000);
-
 console.log("  --- Startup. Telling Mongo to set rounds over 10 minutes ago as complete");
 upperBound = new Date();
 upperBound.setTime((new Date()).getTime() - TIMEOUT_DURATION);
@@ -116,13 +99,16 @@ exports.add = function(req, res, sse) {
   if (storeObj.status == "completed")
     storeObj.completed = new Date();
 
-  // done :P
-  db.rounds.insert(storeObj, {safe: true}, function(err, resu) {
-    if (err) {
-      res.send(500, {error: err});
-    }
-    res.set('Location', '/' + resu[0]['_id']).send(201);
-    sse.publish("global", {"event": "new_round"});
+  // set all current to done
+  db.rounds.update({}, {"$set": {status: "completed"}}, {safe:true, multi:true}, function() {
+    // done :P
+    db.rounds.insert(storeObj, {safe: true}, function(err, resu) {
+      if (err) {
+        res.send(500, {error: err});
+      }
+      res.set('Location', '/' + resu[0]['_id']).send(201);
+      sse.publish("global", {"event": "new_round"});
+    });
   });
 };
 
@@ -162,11 +148,9 @@ exports.update = function(req, res, sse) {
     if (round.status !== storeObj.status) {
       if (storeObj.status == "started" || storeObj.status == "completed") {
         storeObj.started = new Date();
-        roundTimeoutArray[storeObjId] = (new Date()).getTime();
       }
       if (storeObj.status == "completed") {
         storeObj.completed = new Date();
-        delete roundTimeoutArray[storeObjId];
       }
       updatedStatus = true;
     }
@@ -206,11 +190,9 @@ exports.overwrite = function(req, res, sse) {
   storeObj.added = new Date();
   if (storeObj.status == "started" || storeObj.status == "completed") {
     storeObj.started = new Date();
-    roundTimeoutArray[storeObjId] = (new Date()).getTime();
   }
   if (storeObj.status == "completed") {
     storeObj.completed = new Date();
-    delete roundTimeoutArray[storeObjId];
   }
 
   // infer times for each participant
