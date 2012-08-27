@@ -31,7 +31,7 @@ var Client = function(req, res) {
 Client.prototype.publishString = function(m) {
 	var nm = m.replace("\n", "\ndata: ");
 
-	this.res.write("delay: 1000\n");
+	this.res.write("delay: 200\n");
 	this.res.write("id: " + (this.messageCount++) + "\n");
 	this.res.write("data: " + nm + "\n\n");
 	this.res.end();
