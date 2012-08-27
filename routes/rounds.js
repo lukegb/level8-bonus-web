@@ -61,6 +61,8 @@ exports.view = function(req, res){
     var use = req.accepts('html, json');
     if (use == "json") {
       // just for you :)
+      if (round.status !== "completed")
+        delete round.flag; // ehe, no.
       res.send(200, round);
     } else {
       // state should be one of:
