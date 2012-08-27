@@ -1,6 +1,16 @@
 var $ = require('jquery'),
 	jadeify = require('jadeify');
 
+var closeRow = function(eD) {
+	return eD.removeClass("open").find("td div").slideUp("fast", function() {
+		$(this).parent().parent().addClass("hidden");
+	});
+};
+
+var openRow = function(eD) {
+	eD.removeClass("hidden").addClass("open").find("td div").slideDown("fast");
+};
+
 var setupPlateTectonics = function() {
 	$(".extraData").addClass("hidden").removeClass("js-hidden").find("td div").hide();
 	$(".resultsRow").click(function() {
@@ -8,13 +18,14 @@ var setupPlateTectonics = function() {
 		var eD = $this.next(".extraData");
 		if (eD.hasClass("hidden")) {
 			// unhide
-			eD.removeClass("hidden").find("td div").slideDown("fast");
 			document.location.hash = $this.attr("data-participant");
+			$(".open").each(function(k, v) {
+				closeRow($(v));
+			});
+			openRow(eD);
 		} else {
 			document.location.hash = "_";
-			eD.find("td div").slideUp("fast", function() {
-				$(this).parent().parent().addClass("hidden");
-			});
+			closeRow(eD);
 		}
 	});
 
