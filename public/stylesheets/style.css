@@ -73,7 +73,13 @@ body {
 /** thanks http://petewilliams.info/blog/2010/04/display-html-olul-list-as-comma-separated-sentence/ */
 .commaList {
 	list-style-type: none;
+	font-style: italic;
 }
+
+.commaList li {
+	display: inline;
+}
+
 .commaList li:after{
 	content: ',';
 	padding-right: 5px;
