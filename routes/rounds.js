@@ -221,7 +221,7 @@ exports.overwrite = function(req, res, sse) {
     if (num_updated === 0) {
       res.send(404);
     }
-    sse.publish(req.params.round_id, {"event":"update_participants", "new": storeObj.participants});
+    sse.publish(req.params.round_id, {"event":"new_status"}); // assume the worst
     res.send(204);
   });
 };
