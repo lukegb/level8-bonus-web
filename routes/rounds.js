@@ -226,9 +226,7 @@ exports.overwrite = function(req, res, sse) {
 };
 
 exports.register_sse = function(req, res, sse) {
-  fetch_or_404(req.params.round_id, res, function(round) {
-    return sse.register(round._id, req, res);
-  });
+  return sse.register("global", req, res);
 };
 
 exports.trigger_update = function(req, res, sse) {
