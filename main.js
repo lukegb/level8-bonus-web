@@ -68,10 +68,12 @@ $(function() {
 			// done :)
 		} else if (d.event == 'new_status' && amRoundPage && d.id == thisRoundId) {
 			// reload the page :P
-			document.location = document.location;
+			if (debugMode && console.log) console.log("new_status: reload");
+			document.location.reload(true);
 		} else if (d.event == 'new_round') {
 			// reload the page :P
-			document.location = document.location;
+			if (debugMode && console.log) console.log("new_round: reload");
+			document.location.reload(true);
 		}
 	});
 });
