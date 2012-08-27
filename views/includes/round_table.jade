@@ -10,10 +10,13 @@ table.resultsTable.table
   tbody
     - k = 0
     - each participant, k in participants
-      tr.resultsRow(data-participant=participant.nick)
+      - var participantClass = "resultsRow"
+      - if (participant.deleted) { participantClass += " deleted"; }
+      tr(data-participant=participant.nick, class=participantClass)
         td.number
-          a(name=participant.nick)
-          = k+1
+          - if (!participant.deleted)
+            a(name=participant.nick)
+            = k+1
         td.nick= participant.nick
         td.requestsSoFar= participant.requests
         - if (participant.time) {
@@ -26,7 +29,7 @@ table.resultsTable.table
             small N/A
         - }
         td.chunksSoFar= participant.chunkTimes.length
-      - participantClass = "participant-" + encodeURIComponent(participant.nick)
+      - var participantClass = "participant-" + encodeURIComponent(participant.nick)
       tr.extraData(class=participantClass)
         td
         td(colspan=4)
