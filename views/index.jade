@@ -27,6 +27,7 @@ block content
             tr
               th.when When
               th.competitors Participants
+              th.competitorNames
               th.fastestCapture Fastest Capture
               th.status Status
           tbody
@@ -35,6 +36,8 @@ block content
                 td.when
                   a(href="/#{res._id}")= dateFormatter(res.added)
                 td.competitors= res.participants.length
+                td.competitorNames
+                  i= res.participants.slice(0,Math.min(3, res.participants.length)).join(', ')
                 if (res.minCapturer && res.minCapturer.time)
                   td.fastestCapture= res.minCapturer.time/1000
                 else

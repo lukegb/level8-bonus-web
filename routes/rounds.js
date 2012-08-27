@@ -57,9 +57,15 @@ var fetch_or_404 = function(id, res, callback) {
 
 exports.view = function(req, res){
   // fetch from DB or 404
+  var requestFormat = "html";
+  if (req.params.round_id.indexOf('.') !== -1) {
+    var dotPos = req.params.round_id.indexOf('.');
+    requestFormat = req.params.round_id.substring(dotPos + 1);
+    req.params.round_id = req.params.round_id.substring(0, dotPos);
+  }
   fetch_or_404(req.params.round_id, res, function(round) {
     var use = req.accepts('html, json');
-    if (use == "json") {
+    if (use == "json" || requestFormat == "json") {
       // just for you :)
       if (round.status !== "completed")
         delete round.flag; // ehe, no.

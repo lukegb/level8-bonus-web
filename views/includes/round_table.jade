@@ -5,6 +5,7 @@ table.resultsTable.table
       th.number #
       th.nick IRC Nick
       th.requestsSoFar HTTP requests made
+      th.requestsPerSecond HTTP requests/second
       th.timeTaken Time taken to capture flag
       th.chunksSoFar Chunks so far
   tbody
@@ -20,6 +21,14 @@ table.resultsTable.table
         td.nick= participant.nick
         td.requestsSoFar= participant.requests
         - if (participant.time) {
+          td.requestsPerSecond= participant.requests / (participant.time/1000)
+        - } else if (participant.startedAt) {
+          - var dateDiff = participant.startedAt - (new Date()).getTime();
+          td.requestsPerSecond= participant.requests / (dateDiff/1000)
+        - } else {
+          td.requestsPerSecond Data unavailable
+        - }
+        - if (participant.time) {
           td.timeTaken= participant.time/1000
         - } else if (participant.deleted) {
           td.timeTaken
@@ -32,7 +41,7 @@ table.resultsTable.table
       - var participantClass = "participant-" + encodeURIComponent(participant.nick)
       tr.extraData(class=participantClass)
         td
-        td(colspan=4)
+        td(colspan=5)
           div
             span
               | Lock grabbed: 
@@ -59,6 +68,7 @@ table.resultsTable.table
                   th.cumSeconds Cumulative Seconds
                   th.requests Requests
                   th.cumRequests Cumulative Requests
+                  th.requestsPerSecond Requests/second
                   th.locks Locks acquired
                   th.cumLocks Cumulative Locks
               tbody
@@ -70,6 +80,11 @@ table.resultsTable.table
                     td.cumSeconds= (cS += participant.chunkTimes[i])/1000
                     td.requests= participant.chunkReqs[i]
                     td.cumRequests= (cR += participant.chunkReqs[i])
+                    - if ((participant.chunkTimes[i]/1000) != 0) {
+                      td.requestsPerSecond= participant.chunkReqs[i] / (participant.chunkTimes[i]/1000)
+                    - } else {
+                      td.requestsPerSecond 0
+                    - }
                     td.locks= participant.chunkLocks[i]
                     td.cumLocks= (cL += participant.chunkLocks[i])
                 - }
