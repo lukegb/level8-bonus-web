@@ -72,6 +72,11 @@ app.get('/about', routes.pages.about);
 // -- Admin
 app.get('/admin/force_recalcs', routes.rounds.force_recalculations);
 
+//     -- SSE
+app.get('/sse', function(req, res) {
+  return sse.register("global", req, res);
+});
+
 // -- Rounds
 //     -- Make new
 app.post('/', function(req,res) { return routes.rounds.add(req, res, sse); });
@@ -85,10 +90,6 @@ app.get('/:round_id', routes.rounds.view);
 app.put('/:round_id', function(req,res) { return routes.rounds.update(req, res, sse); });
 //     -- Replace existing
 app.post('/:round_id', function(req,res) { return routes.rounds.overwrite(req, res, sse); });
-//     -- SSE
-app.get('/:round_id/sse', function(req, res) {
-  return routes.rounds.register_sse(req, res, sse);
-});
 //     -- Testing: FORCE sse
 app.get('/:round_id/forcesse', function(req, res) {
   routes.rounds.trigger_update(req, res, sse);
