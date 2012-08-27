@@ -35,6 +35,7 @@ Client.prototype.publishString = function(m) {
 	this.res.write("id: " + (this.messageCount++) + "\n");
 	this.res.write("data: " + nm + "\n\n");
 	this.res.end();
+	exports.removeClient(this);
 
 	console.log(" -- Done sending message to client");
 	// done
