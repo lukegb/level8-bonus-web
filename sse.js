@@ -64,14 +64,11 @@ exports.publish = function(key, message, callback) {
 };
 
 exports.removeClient = function(client) {
-	console.log("DEREGISTERING CLIENT...", client);
 	for (var i in clients) {
 		if (clients[i] == client) {
-			console.log("is", clients[i],"!");
 			clients.splice(i, 1);
 			break;
 		}
-		console.log("is not", clients[i]);
 	}
 };
 
