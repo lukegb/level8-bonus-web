@@ -116,7 +116,7 @@ var inferTimings = function(storeObj) {
     for (var i in participant.chunkTimes) {
       totalTime += participant.chunkTimes[i];
     }
-    participant.time = totalTime;
+    storeObj.participants[p_id].time = totalTime;
   }
 
   return storeObj;
