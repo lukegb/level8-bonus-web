@@ -59,7 +59,7 @@ $(function() {
 		if (debugMode && console.log) console.log(d, d.id, amRoundPage, thisRoundId);
 
 		if (d.event == 'update_participants' && amRoundPage && d.id == thisRoundId) {
-			if (!$("#roundTable").length) return (document.location = document.location);
+			if (!$("#roundTable").length) return document.location.reload(true);
 			var $q = jadeify('includes/round_table.jade', {participants: d.new});
 			var $rT = $("#roundTable");
 			$rT.empty();
