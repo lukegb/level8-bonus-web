@@ -37,7 +37,14 @@ block content
                   a(href="/#{res._id}")= dateFormatter(res.added)
                 td.competitors= res.participants.length
                 td.competitorNames
-                  i= res.participants.slice(0,Math.min(3, res.participants.length)).join(', ')
+                  - var competitorObjects = res.participants.slice(0,Math.min(3, res.participants.length))
+                  ul.competitorList.commaList
+                    each competitor in competitorObjects
+                      - if (res.minCapturer && res.minCapturer.time && res.minCapturer == competitor) {
+                        li.minCapturer= competitor.nick
+                      - } else {
+                        li= competitor.nick
+                      - }
                 if (res.minCapturer && res.minCapturer.time)
                   td.fastestCapture= res.minCapturer.time/1000
                 else
