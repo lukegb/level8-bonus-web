@@ -16,7 +16,7 @@ var Client = function(req, res) {
 	req.socket.setTimeout(Infinity);
 
 	req.on('close', function() {
-		that.onDisconnect();
+		that.onDisconnect(that);
 	});
 
 	// write header
@@ -65,9 +65,9 @@ exports.publish = function(key, message, callback) {
 exports.register = function(key, req, res) {
 	// we ignore the key now
 	var client = new Client(req, res);
-	client.onDisconnect = function() {
+	client.onDisconnect = function(me) {
 		for (var i in clients) {
-			if (clients[i] == this) {
+			if (clients[i] == me) {
 				clients.splice(i, 1);
 				break;
 			}
