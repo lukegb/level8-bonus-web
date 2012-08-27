@@ -64,6 +64,11 @@ app.configure('development', function(){
 // -- Index
 app.get('/', routes.index);
 
+// -- Rules
+app.get('/rules', routes.pages.rules);
+// -- About
+app.get('/about', routes.pages.about);
+
 // -- Rounds
 //     -- Make new
 app.post('/', routes.rounds.add);

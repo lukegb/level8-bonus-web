@@ -1,0 +1,32 @@
+extends layout
+
+block content
+  h1 The Rules of the Game
+  p We like to keep the game simple but there are a few rules you need to follow, and things you should know
+  ul
+    li Send !join in the channel to join a round, and !leave to leave it again.
+    li We measure several things:
+      ul
+        li
+          b Time
+          | : we measure time between your first and last request.
+        li
+          b Request count
+          | : this is measured automatically by the server.
+        li
+          b Lock grab count
+          | : again, automatically measured - an interesting statistic.
+    li FlagServ will NOTICE you the endpoint on IRC just before the round starts.
+    li When you've got the flag, PM FlagServ with what you think it is.
+    li The round will end after every participant has captured the flag, or a timeout.
+    li Please send the programming language you're using in your user agent, if you override it.
+  h2 Running your script
+  p We provide you with a "level2" server you can run your scripts from. Just ask in IRC.
+  p This server has the following languages installed:
+  ul
+    li Go (go version go1)
+    li Python (Python 2.7.3)
+    li Ruby (ruby 1.9.3p0 (2011-10-30 revision 33570) [i686-linux])
+    li gcc/g++ (gcc version 4.6.3 (Ubuntu/Linaro 4.6.3-1ubuntu5))
+    li Node.js (v0.8.8)
+  p ...but if you need more, ping lukegb in IRC and he'll be glad to help out!

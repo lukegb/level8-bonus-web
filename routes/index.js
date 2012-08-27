@@ -4,6 +4,7 @@
  */
 
 exports.rounds = require('./rounds.js');
+exports.pages = require('./pages.js');
 
 var AT_A_TIME = 35;
 

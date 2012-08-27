@@ -15,10 +15,6 @@ body {
 	text-align: right;
 }
 
-.resultsTable tr {
-	/*display: none;*/
-}
-
 .resultsTable td {
 	cursor: pointer;
 }
@@ -29,7 +25,11 @@ body {
 	border-top: 1px solid #eee;
 }
 
-.resultsTable .extraData.hidden {
+.hidden {
+	display: none;
+}
+
+.has-js .js-hidden {
 	display: none;
 }
 
@@ -51,4 +51,16 @@ body {
 
 .chunkBreakdown {
 	list-style-type: none;
+}
+
+.aboutUsBox {
+	min-height: 90px;
+}
+
+.avatar {
+	float: right;
+	width: 90px;
+	height: 90px;
+	border-radius: 5px;
+	box-shadow: 2px 2px 2px #333;
 }

@@ -2,7 +2,7 @@ var $ = require('jquery'),
 	jadeify = require('jadeify');
 
 var setupPlateTectonics = function() {
-	$(".extraData").addClass("hidden").find("td div").hide();
+	$(".extraData").addClass("hidden").removeClass("js-hidden").find("td div").hide();
 	$(".resultsRow").click(function() {
 		var $this = $(this);
 		var eD = $this.next(".extraData");
@@ -38,7 +38,7 @@ $(function() {
 				return console.log("Origin mismatch:", e.origin, document.location.origin);
 			var d = JSON.parse(e.data);
 
-			if (d.event == 'update_participants') {
+			if (d.event == 'update_participants' && $("#roundTable").length) {
 				var $q = jadeify('includes/round_table.jade', {participants: d.new});
 				var $rT = $("#roundTable");
 				$rT.empty();

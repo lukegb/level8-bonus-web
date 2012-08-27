@@ -104,6 +104,24 @@ exports.add = function(req, res) {
   });
 };
 
+var inferTimings = function(storeObj) {
+
+  // infer times for each participant
+  for (var p_id in storeObj.participants) {
+    var participant = storeObj.participants[p_id];
+    if (participant.chunkTimes.length != storeObj.rounds)
+      continue; // no time
+    var totalTime = 0;
+    for (var i in participant.chunkTimes) {
+      totalTime += participant.chunkTimes[i];
+    }
+    participant.time = totalTime;
+  }
+
+  return storeObj;
+
+};
+
 exports.update = function(req, res, sse) {
   // verify secret
   if (!req.get('x-secret') || req.get('x-secret') != req.app.get('secret')) {
@@ -128,20 +146,12 @@ exports.update = function(req, res, sse) {
       updatedStatus = true;
     }
 
-    // infer times for each participant
-    for (var p_id in storeObj.participants) {
-      var participant = storeObj.participants[p_id];
-      var totalTime = 0;
-      for (var i in participant.chunkTimes) {
-        totalTime += participant.chunkTimes[i];
-      }
-      participant.time = totalTime;
-    }
-
     if (storeObj.participants.length === 0) { // delete empty rounds
       db.rounds.remove({_id: storeObjId});
       return res.send(204);
     }
+
+    storeObj = inferTimings(storeObj);
 
     db.rounds.update({_id: storeObjId}, {"$set": storeObj}, {safe:true}, function(err, num_updated) {
       if (err) {
@@ -181,6 +191,8 @@ exports.overwrite = function(req, res, sse) {
   // infer times for each participant
   for (var p_id in storeObj.participants) {
     var participant = storeObj.participants[p_id];
+    if (participant.chunkTimes.length != storeObj.rounds)
+      continue; // no time
     var totalTime = 0;
     for (var i in participant.chunkTimes) {
       totalTime += participant.chunkTimes[i];
@@ -192,6 +204,8 @@ exports.overwrite = function(req, res, sse) {
     db.rounds.remove({_id: storeObjId});
     return res.send(204);
   }
+
+  storeObj = inferTimings(storeObj);
 
   db.rounds.update({_id: new mongo.ObjectId(req.params.round_id)}, storeObj, {safe:true, upsert:true}, function(err, num_updated) {
     if (err) {
