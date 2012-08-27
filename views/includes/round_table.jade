@@ -36,8 +36,7 @@ table.resultsTable.table
               i= participant.locks
               |  times
               - if (participant.requests != 0) {
-              |  (
-              i= participant.requests/participant.locks
+              i= " (" + Math.round((participant.requests/participant.locks) * 100)/100
               |  requests/lock)
               - }
               | .<br>
