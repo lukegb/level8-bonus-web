@@ -96,3 +96,7 @@ body {
 	content: '';
 	padding: 0;
 }
+
+.minCapturer {
+	font-weight: bold;
+}
