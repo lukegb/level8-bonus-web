@@ -41,25 +41,31 @@ $(function() {
 		setupPlateTectonics();
 	}
 
-	if ($(".roundHeader").length) {
-		// register for SSEs
-		var sse = new EventSource(document.location.pathname + "/sse");
-		sse.addEventListener('message', function(e) {
-			if (e.origin !== document.location.origin)
-				return console.log("Origin mismatch:", e.origin, document.location.origin);
-			var d = JSON.parse(e.data);
-
-			if (d.event == 'update_participants' && $("#roundTable").length) {
-				var $q = jadeify('includes/round_table.jade', {participants: d.new});
-				var $rT = $("#roundTable");
-				$rT.empty();
-				$q.appendTo($rT);
-				setupPlateTectonics();
-				// done :)
-			} else if (d.event == 'new_status') {
-				// reload the page :P
-				document.location = document.location;
-			}
-		});
+	var amRoundPage = ($(".roundHeader").length > 0);
+	var thisRoundId = "";
+	if (amRoundPage) {
+		thisRoundId = $(".roundHeader").attr("data-round-id");
 	}
+	var sse = new EventSource(document.location.pathname + "/sse");
+	sse.addEventListener('message', function(e) {
+		if (e.origin !== document.location.origin)
+			return console.log("Origin mismatch:", e.origin, document.location.origin);
+		var d = JSON.parse(e.data);
+
+		if (d.event == 'update_participants' && amRoundPage && d.id == thisRoundId) {
+			if (!$("#roundTable").length) return (document.location = document.location);
+			var $q = jadeify('includes/round_table.jade', {participants: d.new});
+			var $rT = $("#roundTable");
+			$rT.empty();
+			$q.appendTo($rT);
+			setupPlateTectonics();
+			// done :)
+		} else if (d.event == 'new_status' && amRoundPage && d.id == thisRoundId) {
+			// reload the page :P
+			document.location = document.location;
+		} else if (d.event == 'new_round') {
+			// reload the page :P
+			document.location = document.location;
+		}
+	});
 });

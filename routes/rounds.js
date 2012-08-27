@@ -114,6 +114,7 @@ exports.add = function(req, res) {
       res.send(500, {error: err});
     }
     res.set('Location', '/' + resu[0]['_id']).send(201);
+    sse.publish("global", {"event": "new_round"});
   });
 };
 
@@ -211,8 +212,6 @@ exports.overwrite = function(req, res, sse) {
     db.rounds.remove({_id: storeObjId});
     return res.send(204);
   }
-
-  storeObj = inferTimings(storeObj);
 
   db.rounds.update({_id: new mongo.ObjectId(req.params.round_id)}, storeObj, {safe:true, upsert:true}, function(err, num_updated) {
     if (err) {

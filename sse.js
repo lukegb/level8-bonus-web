@@ -1,6 +1,6 @@
 /*** SSE ***/
 
-var clients = {};
+var clients = [];
 
 var Client = function(req, res) {
 	var that = this;
@@ -34,7 +34,7 @@ Client.prototype.publishString = function(m) {
 	this.res.write("delay: 1000\n");
 	this.res.write("id: " + (this.messageCount++) + "\n");
 	this.res.write("data: " + nm + "\n\n");
-	this.res.end(); // need to end on heroku
+	this.res.end();
 
 	console.log(" -- Done sending message to client");
 	// done
@@ -47,13 +47,14 @@ Client.prototype.publish = function(message) {
 exports.publish = function(key, message, callback) {
 	console.log("Publishing message to", key, " - ", message);
 	var k = key.toString();
+	message.id = k;
 	var scope = {messagesSent: 0};
-	if (!clients[key])
+	if (!clients)
 		if (callback)
 			return callback(0);
 		else
 			return;
-	clients[key].forEach(function(client) {
+	clients.forEach(function(client) {
 		client.publish(message);
 		scope.messagesSent++;
 	}, scope);
@@ -62,20 +63,17 @@ exports.publish = function(key, message, callback) {
 };
 
 exports.register = function(key, req, res) {
-	var k = key.toString();
+	// we ignore the key now
 	var client = new Client(req, res);
-	client.onDisconnect = (function(nk) {
-		return function() {
-			var c = clients[nk];
-			for (var i in c) {
-				if (c[i] == client) {
-					c.splice(i, 1);
-					break;
-				}
+	client.onDisconnect = function() {
+		for (var i in clients) {
+			if (clients[i] == client) {
+				clients.splice(i, 1);
+				break;
 			}
-		};
-	})(k);
-	if (!clients[k])
-		clients[k] = [];
-	clients[k].push(client);
+		}
+	};
+	if (!clients)
+		clients = [];
+	clients.push(client);
 };
