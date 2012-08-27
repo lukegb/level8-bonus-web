@@ -23,7 +23,7 @@ table.resultsTable.table
         - if (participant.time) {
           td.requestsPerSecond= participant.requests / (participant.time/1000)
         - } else if (participant.startedAt) {
-          - var dateDiff = participant.startedAt - (new Date()).getTime();
+          - var dateDiff = (new Date()).getTime() - participant.startedAt;
           td.requestsPerSecond= participant.requests / (dateDiff/1000)
         - } else {
           td.requestsPerSecond Data unavailable
