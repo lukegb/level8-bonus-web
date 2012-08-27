@@ -34,7 +34,13 @@ table.resultsTable.table
             span
               | Lock grabbed: 
               i= participant.locks
-              |  times.<br>
+              |  times
+              - if (participant.requests != 0) {
+              |  (
+              i= participant.requests/participant.locks
+              |  requests/lock)
+              - }
+              | .<br>
             - if (participant.agent && participant.agent.length) {
               span
                 | User agent: 
@@ -51,8 +57,10 @@ table.resultsTable.table
                   th.cumSeconds Cumulative Seconds
                   th.requests Requests
                   th.cumRequests Cumulative Requests
+                  th.locks Locks acquired
+                  th.cumLocks Cumulative Locks
               tbody
-                - var cS = 0, cR = 0
+                - var cS = 0, cR = 0, cL = 0
                 - for (var i = 0; i < participant.chunkTimes.length; i++) {
                   tr
                     td.number= i+1
@@ -60,4 +68,6 @@ table.resultsTable.table
                     td.cumSeconds= (cS += participant.chunkTimes[i])/1000
                     td.requests= participant.chunkReqs[i]
                     td.cumRequests= (cR += participant.chunkReqs[i])
+                    td.locks= participant.chunkLocks[i]
+                    td.cumLocks= (cL += participant.chunkLocks[i])
                 - }
