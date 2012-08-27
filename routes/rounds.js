@@ -260,7 +260,7 @@ exports.force_recalculations = function(req, res) {
     doc = inferTimings(doc);
 
     // now update status
-    var t = doc.started.getTime();
+    var t = doc.started ? doc.started.getTime() : 0;
     var tn = new Date().getTime();
     var td = tn - t;
     if (td > 1000 * 60 * 10) { // more than ten minutes
