@@ -222,7 +222,7 @@ exports.trigger_update = function(req, res, sse) {
 };
 
 exports.force_recalculations = function(req, res) {
-  if (!req.param('secret') || req.param('secret') != '9n4alsdv98v')
+  if (!req.param('secret') || req.param('secret') != req.app.get('secret'))
     return res.send(403);
 
   // grab all of them
